@@ -1,16 +1,53 @@
 // 读写数据
 let note;
+let saveStatus = 1;
+let content_obj = $("#content");
+let title_obj = $("#title");
+let tip_obj = $('#tip');
+
 $(document).ready(function () {
+    content_obj = $("#content");
+    title_obj = $("#title");
+    tip_obj = $('#tip');
+
     init();
-    $("#content").blur(function () {
+    content_obj.blur(function () {
+        console.log('on blur to save data');
         save();
     });
-
-    $("#title").blur(function () {
-        loadNote($("#title").val());
+    content_obj.bind('input propertychange',
+        _.throttle(function () {
+            save();
+        }, 10000, {leading: false})
+    );
+    content_obj.bind('input propertychange', status2unsave);
+    title_obj.blur(function () {
+        loadNote(title_obj.val());
     });
 });
 
+function status2saved() {
+    if (saveStatus === 0) {
+        tip_obj.html('已保存');
+        saveStatus = 1;
+    }
+}
+
+function status2unsave() {
+    if (saveStatus === 1) {
+        tip_obj.html('未保存');
+        saveStatus = 0;
+    }
+}
+
+function status2error(msg) {
+    tip_obj.html("<p style='color:red'>" + msg + "</p>");
+    saveStatus = 0;
+}
+
+function status2notConnect() {
+    status2error('保存失败，服务器连接失败');
+}
 
 function loadNote(title) {
     $.ajax({
@@ -28,19 +65,26 @@ function loadNote(title) {
                     }
 
                 } else {
-                    console.error(response)
+                    console.error(response);
+                    status2error('读取数据错误,' + response.getMsg());
                 }
 
             }
         },
         error: function (error) {
-            console.error('请求失败\n', error);
+            console.error(error);
+            status2error('读取数据失败,服务器连接失败');
         }
     });
 }
 
 
-function save() {
+function save(force) {
+    if (force!==true&&saveStatus === 1) {
+        console.log('do not need save');
+        return;
+    }
+
     note.setTitle($("#title").val());
     note.setContent($("#content").val());
     if (note.getContent() === "") {
@@ -66,17 +110,19 @@ function insertNote(note) {
         data: note,
         success: function (data) {
             if (data) {
-                let response =new Response(data);
-                if (new Response(data).getCode() !== 200) {
-                    alert("保存失败");
+                let response = new Response(data);
+                if (new response.getCode() !== 200) {
+                    console.error(response);
+                    status2error('保存失败，'+response.getMsg());
                 } else {
+                    status2saved();
                     note = response.getNote();
                 }
             }
         },
         error: function (error) {
             console.error(error);
-            alert("服务器请求失败");
+            status2notConnect();
         }
     });
 }
@@ -88,14 +134,18 @@ function updateNote(note) {
         data: note,
         success: function (data) {
             if (data) {
-                if (new Response(data).getCode() !== 200) {
-                    alert("保存失败")
+                let response = new Response(data);
+                if (response.getCode() !== 200) {
+                    status2error('保存失败，'+response.getMsg());
+                } else {
+                    status2saved();
+                    console.log('update data');
                 }
             }
         },
         error: function (error) {
             console.error(error);
-            alert("服务器请求失败");
+            status2notConnect();
         }
     });
 }
@@ -104,19 +154,21 @@ function deleteNote(title) {
     $.ajax({
         type: "GET",
         url: SERVER_PATH.deleteOne,
-        data: {title:title},
+        data: {title: title},
         success: function (data) {
             if (data) {
-                if (new Response(data).getCode() !== 200) {
-                    console.error("删除失败");
+                let response = new Response(data);
+                if (response.getCode() !== 200) {
+                    status2error('保存失败，'+response.getMsg());
                 } else {
+                    status2saved();
                     note.setId(null);
                 }
             }
         },
         error: function (error) {
             console.error(error);
-            alert("服务器请求失败");
+            status2notConnect();
         }
     });
 }

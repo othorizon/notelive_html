@@ -5,6 +5,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <link rel="shortcut icon" href="favicon.ico">
     <link rel="stylesheet" href="style.css" type="text/css"/>
+    <script src="//cdn.bootcss.com/lodash.js/4.17.10/lodash.min.js"></script>
     <script src="//cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
     <script src="av-config.js"></script>
     <script src="note.js"></script>
@@ -12,7 +13,7 @@
 
 
 <body id="body" onhashchange="init()">
-<div id="tip"></div>
+<!--<div id="tip"></div>-->
 <input type="hidden" id="myid" value="${param.id}">
 <input type="hidden" id="mybasepath" value="<%=basePath%>">
 <br/>
@@ -20,6 +21,7 @@
     <input id="title" type="hidden" class="title"/>
 </div>
 <!--<br/>-->
+<div id="tip" class="tip"></div>
 <div class="stack ">
     <div class="layer_1">
         <div class="layer_2">
