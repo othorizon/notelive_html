@@ -1,6 +1,6 @@
 // 读写数据
 let note;
-let saveStatus = 1;
+let saveStatus = 0;
 let content_obj;
 let title_obj;
 let tip_obj;
@@ -40,15 +40,15 @@ $(document).ready(function () {
 function status2saved() {
     if (saveStatus === 0) {
         tip_obj.html('已保存');
-        saveStatus = 1;
     }
+    saveStatus = 1;
 }
 
 function status2unsave() {
     if (saveStatus === 1) {
         tip_obj.html('未保存');
-        saveStatus = 0;
     }
+    saveStatus = 0;
 }
 
 function status2error(msg) {
