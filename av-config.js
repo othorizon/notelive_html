@@ -1,10 +1,10 @@
-const SERVER_PREFIX = 'http://t.rizon.top/notelive/server';
+const SERVER_PREFIX = 'http://live.rizon.top';
 
 const SERVER_PATH = {
-    queryOne:SERVER_PREFIX+"/queryOne",
-    updateOne:SERVER_PREFIX+"/updateOne",
-    insertOne:SERVER_PREFIX+"/insertOne",
-    deleteOne:SERVER_PREFIX+"/deleteOne",
+    queryOne:SERVER_PREFIX+"/server/queryOne",
+    updateOne:SERVER_PREFIX+"/server/updateOne",
+    insertOne:SERVER_PREFIX+"/server/insertOne",
+    deleteOne:SERVER_PREFIX+"/server/deleteOne",
 };
 class Note {
     constructor(obj) {
