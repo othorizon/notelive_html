@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <title>note live</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="shortcut icon" href="favicon.ico">
+    <link rel="stylesheet" href="style.css" type="text/css"/>
+    <script src="//cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <script src="av-config.js"></script>
+    <script src="note.js"></script>
+</head>
+
+
+<body id="body" onhashchange="init()">
+<div id="tip"></div>
+<input type="hidden" id="myid" value="${param.id}">
+<input type="hidden" id="mybasepath" value="<%=basePath%>">
+<br/>
+<div id="title_div">
+    <input id="title" type="hidden" class="title"/>
+</div>
+<!--<br/>-->
+<div class="stack ">
+    <div class="layer_1">
+        <div class="layer_2">
+            <div id="content_div" class="layer_3">
+                <textarea id="content" class="contents " spellcheck="true"></textarea>
+            </div>
+        </div>
+    </div>
+</div>
+<br/>
+<div id="controls">
+    <a id="render_markdown" href="markdown/{anchor}" target="_blank">Markdown渲染</a>
+    <a id="render_html" href="html/{anchor}" target="_blank">Html渲染</a>
+    <a href="markdown/#help" target="_blank">帮助与关于</a>
+    <a href="javascript:alert('页面加密功能尚未开发ヾ(*・-・)ﾂθ')">修改密码</a>
+</div>
+
+</body>
+</html>

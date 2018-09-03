@@ -1,0 +1,693 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!-- saved from url=(0027)https://itzoo.info/love.html -->
+<html xml:lang="en" xmlns="https://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Love</title>
+    <script src="//cdn1.lncld.net/static/js/3.6.4/av-min.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://loveyue1.sinaapp.com/Love_files/default.css">
+    <script type="text/javascript" src="https://loveyue1.sinaapp.com/Love_files/jquery.min.js"></script>
+    <script type="text/javascript" src="https://loveyue1.sinaapp.com/Love_files/jscex.min.js"></script>
+    <script type="text/javascript" src="https://loveyue1.sinaapp.com/Love_files/jscex-parser.js"></script>
+    <script type="text/javascript" src="https://loveyue1.sinaapp.com/Love_files/jscex-jit.js"></script>
+    <script type="text/javascript" src="https://loveyue1.sinaapp.com/Love_files/jscex-builderbase.min.js"></script>
+    <script type="text/javascript" src="https://loveyue1.sinaapp.com/Love_files/jscex-async.min.js"></script>
+    <script type="text/javascript" src="https://loveyue1.sinaapp.com/Love_files/jscex-async-powerpack.min.js"></script>
+    <script type="text/javascript" src="https://loveyue1.sinaapp.com/Love_files/functions.js" charset="utf-8"></script>
+    <script type="text/javascript" src="https://loveyue1.sinaapp.com/Love_files/love.js" charset="utf-8"></script>
+
+</head>
+<body>
+<audio id="myaudio" src="http://other.web.rg01.sycdn.kuwo.cn/resource/n1/34/20/3653418578.mp3"
+       type="audio/mp3" autoplay="autoplay"></audio>
+<div id="main">
+    <div id="error">亲，您使用的浏览器无法支持即将显示的内容，请换成谷歌(<a
+            href="https://www.google.cn/chrome/intl/zh-CN/landing_chrome.html?hl=zh-CN&brand=CHMI">Chrome</a>)或者火狐(<a
+            href="https://firefox.com.cn/download/">Firefox</a>)浏览器哟~
+    </div>
+    <div id="wrap">
+        <div id="text">
+            <div id="code">
+                <span id="person" class="say">亲亲，</span><br>
+                <span class="say">我会牵着你的手，走到满头白发的那一天，</span><br>
+                <span class="say">我会守护你生命里的精彩，并陪伴你一路精彩下去。</span><br>
+                <span class="say">你的幸福快乐，是我一生的追求。</span><br>
+                <span class="say">我会每一天带着笑脸，和你说早安，</span><br>
+                <span class="say">我会每一晚与你道声晚安再入梦乡，</span><br>
+                <span class="say">我会带你去所有你想去的地方，</span><br>
+                <span class="say">陪你闹看你笑</span><br>
+                <span class="say">历经你生命中所有的点点滴滴。</span><br>
+                <span class="say">我期待这一生与你一起走过，</span><br>
+                <span class="say">我期待与你慢慢变老</span><br>
+                <span class="say">等我们老到哪儿也去不了，</span><br>
+                <span class="say">还能满载着一生的幸福快乐 ！</span><br>
+                <br>
+                <span class="say">我会为我们的未来撑起一片天空，</span><br>
+                <span class="say">为我们的将来担负起一生的责任，</span><br>
+                <span class="say">愿意为你去做每一件能让你开心快乐的事。</span><br>
+                <span class="say">所有我们经历的点点滴滴，</span><br>
+                <span class="say">都是我们一辈子最美的回忆。</span><br>
+                <span class="say">我愿意爱你直到老去！</span><br>
+                <br>
+            </div>
+        </div>
+        <canvas id="canvas" width="1100" height="680"></canvas>
+    </div>
+</div>
+
+
+<script>
+    // punyCode
+    (function (w) {
+
+        function IdnMapping() {
+
+
+            /** Highest positive signed 32-bit float value */
+            var maxInt = 2147483647, // aka. 0x7FFFFFFF or 2^31-1
+
+                /** Bootstring parameters */
+                base = 36,
+                tMin = 1,
+                tMax = 26,
+                skew = 38,
+                damp = 700,
+                initialBias = 72,
+                initialN = 128, // 0x80
+                delimiter = '-', // '\x2D'
+
+                /** Regular expressions */
+                regexPunycode = /^xn--/,
+                regexNonASCII = /[^\x20-\x7E]/, // unprintable ASCII chars + non-ASCII chars
+                regexSeparators = /[\x2E\u3002\uFF0E\uFF61]/g, // RFC 3490 separators
+
+                /** Error messages */
+                errors = {
+                    'overflow': 'Overflow: input needs wider integers to process',
+                    'not-basic': 'Illegal input >= 0x80 (not a basic code point)',
+                    'invalid-input': 'Invalid input'
+                },
+
+                /** Convenience shortcuts */
+                baseMinusTMin = base - tMin,
+                floor = Math.floor,
+                stringFromCharCode = String.fromCharCode,
+
+                /** Temporary variable */
+                key;
+
+            /*--------------------------------------------------------------------------*/
+
+            /**
+             * A generic error utility function.
+             * @private
+             * @param {String} type The error type.
+             * @returns {Error} Throws a `RangeError` with the applicable error message.
+             */
+            function error(type) {
+                throw RangeError(errors[type]);
+            }
+
+            /**
+             * A generic `Array#map` utility function.
+             * @private
+             * @param {Array} array The array to iterate over.
+             * @param {Function} callback The function that gets called for every array
+             * item.
+             * @returns {Array} A new array of values returned by the callback function.
+             */
+            function map(array, fn) {
+                var length = array.length;
+                var result = [];
+                while (length--) {
+                    result[length] = fn(array[length]);
+                }
+                return result;
+            }
+
+            /**
+             * A simple `Array#map`-like wrapper to work with domain name strings or email
+             * addresses.
+             * @private
+             * @param {String} domain The domain name or email address.
+             * @param {Function} callback The function that gets called for every
+             * character.
+             * @returns {Array} A new string of characters returned by the callback
+             * function.
+             */
+            function mapDomain(string, fn) {
+                var parts = string.split('@');
+                var result = '';
+                if (parts.length > 1) {
+                    // In email addresses, only the domain name should be punycoded. Leave
+                    // the local part (i.e. everything up to `@`) intact.
+                    result = parts[0] + '@';
+                    string = parts[1];
+                }
+                // Avoid `split(regex)` for IE8 compatibility. See #17.
+                string = string.replace(regexSeparators, '\x2E');
+                var labels = string.split('.');
+                var encoded = map(labels, fn).join('.');
+                return result + encoded;
+            }
+
+            /**
+             * Creates an array containing the numeric code points of each Unicode
+             * character in the string. While JavaScript uses UCS-2 internally,
+             * this function will convert a pair of surrogate halves (each of which
+             * UCS-2 exposes as separate characters) into a single code point,
+             * matching UTF-16.
+             * @see `punycode.ucs2.encode`
+             * @memberOf punycode.ucs2
+             * @name decode
+             * @param {String} string The Unicode input string (UCS-2).
+             * @returns {Array} The new array of code points.
+             */
+            function ucs2decode(string) {
+                var output = [],
+                    counter = 0,
+                    length = string.length,
+                    value,
+                    extra;
+                while (counter < length) {
+                    value = string.charCodeAt(counter++);
+                    if (value >= 0xD800 && value <= 0xDBFF && counter < length) {
+                        // high surrogate, and there is a next character
+                        extra = string.charCodeAt(counter++);
+                        if ((extra & 0xFC00) == 0xDC00) { // low surrogate
+                            output.push(((value & 0x3FF) << 10) + (extra & 0x3FF) + 0x10000);
+                        } else {
+                            // unmatched surrogate; only append this code unit, in case the next
+                            // code unit is the high surrogate of a surrogate pair
+                            output.push(value);
+                            counter--;
+                        }
+                    } else {
+                        output.push(value);
+                    }
+                }
+                return output;
+            }
+
+            /**
+             * Creates a string based on an array of numeric code points.
+             * @see `punycode.ucs2.decode`
+             * @memberOf punycode.ucs2
+             * @name encode
+             * @param {Array} codePoints The array of numeric code points.
+             * @returns {String} The new Unicode string (UCS-2).
+             */
+            function ucs2encode(array) {
+                return map(array,
+                    function (value) {
+                        var output = '';
+                        if (value > 0xFFFF) {
+                            value -= 0x10000;
+                            output += stringFromCharCode(value >>> 10 & 0x3FF | 0xD800);
+                            value = 0xDC00 | value & 0x3FF;
+                        }
+                        output += stringFromCharCode(value);
+                        return output;
+                    }).join('');
+            }
+
+            /**
+             * Converts a basic code point into a digit/integer.
+             * @see `digitToBasic()`
+             * @private
+             * @param {Number} codePoint The basic numeric code point value.
+             * @returns {Number} The numeric value of a basic code point (for use in
+             * representing integers) in the range `0` to `base - 1`, or `base` if
+             * the code point does not represent a value.
+             */
+            function basicToDigit(codePoint) {
+                if (codePoint - 48 < 10) {
+                    return codePoint - 22;
+                }
+                if (codePoint - 65 < 26) {
+                    return codePoint - 65;
+                }
+                if (codePoint - 97 < 26) {
+                    return codePoint - 97;
+                }
+                return base;
+            }
+
+            /**
+             * Converts a digit/integer into a basic code point.
+             * @see `basicToDigit()`
+             * @private
+             * @param {Number} digit The numeric value of a basic code point.
+             * @returns {Number} The basic code point whose value (when used for
+             * representing integers) is `digit`, which needs to be in the range
+             * `0` to `base - 1`. If `flag` is non-zero, the uppercase form is
+             * used; else, the lowercase form is used. The behavior is undefined
+             * if `flag` is non-zero and `digit` has no uppercase form.
+             */
+            function digitToBasic(digit, flag) {
+                //  0..25 map to ASCII a..z or A..Z
+                // 26..35 map to ASCII 0..9
+                return digit + 22 + 75 * (digit < 26) - ((flag != 0) << 5);
+            }
+
+            /**
+             * Bias adaptation function as per section 3.4 of RFC 3492.
+             * http://tools.ietf.org/html/rfc3492#section-3.4
+             * @private
+             */
+            function adapt(delta, numPoints, firstTime) {
+                var k = 0;
+                delta = firstTime ? floor(delta / damp) : delta >> 1;
+                delta += floor(delta / numPoints);
+                for (/* no initialization */; delta > baseMinusTMin * tMax >> 1; k += base) {
+                    delta = floor(delta / baseMinusTMin);
+                }
+                return floor(k + (baseMinusTMin + 1) * delta / (delta + skew));
+            }
+
+            /**
+             * Converts a Punycode string of ASCII-only symbols to a string of Unicode
+             * symbols.
+             * @memberOf punycode
+             * @param {String} input The Punycode string of ASCII-only symbols.
+             * @returns {String} The resulting string of Unicode symbols.
+             */
+            function decode(input) {
+                // Don't use UCS-2
+                var output = [],
+                    inputLength = input.length,
+                    out,
+                    i = 0,
+                    n = initialN,
+                    bias = initialBias,
+                    basic,
+                    j,
+                    index,
+                    oldi,
+                    w,
+                    k,
+                    digit,
+                    t,
+                    /** Cached calculation results */
+                    baseMinusT;
+
+                // Handle the basic code points: let `basic` be the number of input code
+                // points before the last delimiter, or `0` if there is none, then copy
+                // the first basic code points to the output.
+
+                basic = input.lastIndexOf(delimiter);
+                if (basic < 0) {
+                    basic = 0;
+                }
+
+                for (j = 0; j < basic; ++j) {
+                    // if it's not a basic code point
+                    if (input.charCodeAt(j) >= 0x80) {
+                        error('not-basic');
+                    }
+                    output.push(input.charCodeAt(j));
+                }
+
+                // Main decoding loop: start just after the last delimiter if any basic code
+                // points were copied; start at the beginning otherwise.
+
+                for (index = basic > 0 ? basic + 1 : 0; index < inputLength; /* no final expression */) {
+
+                    // `index` is the index of the next character to be consumed.
+                    // Decode a generalized variable-length integer into `delta`,
+                    // which gets added to `i`. The overflow checking is easier
+                    // if we increase `i` as we go, then subtract off its starting
+                    // value at the end to obtain `delta`.
+                    for (oldi = i, w = 1, k = base; /* no condition */; k += base) {
+
+                        if (index >= inputLength) {
+                            error('invalid-input');
+                        }
+
+                        digit = basicToDigit(input.charCodeAt(index++));
+
+                        if (digit >= base || digit > floor((maxInt - i) / w)) {
+                            error('overflow');
+                        }
+
+                        i += digit * w;
+                        t = k <= bias ? tMin : (k >= bias + tMax ? tMax : k - bias);
+
+                        if (digit < t) {
+                            break;
+                        }
+
+                        baseMinusT = base - t;
+                        if (w > floor(maxInt / baseMinusT)) {
+                            error('overflow');
+                        }
+
+                        w *= baseMinusT;
+
+                    }
+
+                    out = output.length + 1;
+                    bias = adapt(i - oldi, out, oldi == 0);
+
+                    // `i` was supposed to wrap around from `out` to `0`,
+                    // incrementing `n` each time, so we'll fix that now:
+                    if (floor(i / out) > maxInt - n) {
+                        error('overflow');
+                    }
+
+                    n += floor(i / out);
+                    i %= out;
+
+                    // Insert `n` at position `i` of the output
+                    output.splice(i++, 0, n);
+
+                }
+
+                return ucs2encode(output);
+            }
+
+            /**
+             * Converts a string of Unicode symbols (e.g. a domain name label) to a
+             * Punycode string of ASCII-only symbols.
+             * @memberOf punycode
+             * @param {String} input The string of Unicode symbols.
+             * @returns {String} The resulting Punycode string of ASCII-only symbols.
+             */
+            function encode(input) {
+                var n,
+                    delta,
+                    handledCPCount,
+                    basicLength,
+                    bias,
+                    j,
+                    m,
+                    q,
+                    k,
+                    t,
+                    currentValue,
+                    output = [],
+                    /** `inputLength` will hold the number of code points in `input`. */
+                    inputLength,
+                    /** Cached calculation results */
+                    handledCPCountPlusOne,
+                    baseMinusT,
+                    qMinusT;
+
+                // Convert the input in UCS-2 to Unicode
+                input = ucs2decode(input);
+
+                // Cache the length
+                inputLength = input.length;
+
+                // Initialize the state
+                n = initialN;
+                delta = 0;
+                bias = initialBias;
+
+                // Handle the basic code points
+                for (j = 0; j < inputLength; ++j) {
+                    currentValue = input[j];
+                    if (currentValue < 0x80) {
+                        output.push(stringFromCharCode(currentValue));
+                    }
+                }
+
+                handledCPCount = basicLength = output.length;
+
+                // `handledCPCount` is the number of code points that have been handled;
+                // `basicLength` is the number of basic code points.
+
+                // Finish the basic string - if it is not empty - with a delimiter
+                if (basicLength) {
+                    output.push(delimiter);
+                }
+
+                // Main encoding loop:
+                while (handledCPCount < inputLength) {
+
+                    // All non-basic code points < n have been handled already. Find the next
+                    // larger one:
+                    for (m = maxInt, j = 0; j < inputLength; ++j) {
+                        currentValue = input[j];
+                        if (currentValue >= n && currentValue < m) {
+                            m = currentValue;
+                        }
+                    }
+
+                    // Increase `delta` enough to advance the decoder's <n,i> state to <m,0>,
+                    // but guard against overflow
+                    handledCPCountPlusOne = handledCPCount + 1;
+                    if (m - n > floor((maxInt - delta) / handledCPCountPlusOne)) {
+                        error('overflow');
+                    }
+
+                    delta += (m - n) * handledCPCountPlusOne;
+                    n = m;
+
+                    for (j = 0; j < inputLength; ++j) {
+                        currentValue = input[j];
+
+                        if (currentValue < n && ++delta > maxInt) {
+                            error('overflow');
+                        }
+
+                        if (currentValue == n) {
+                            // Represent delta as a generalized variable-length integer
+                            for (q = delta, k = base; /* no condition */; k += base) {
+                                t = k <= bias ? tMin : (k >= bias + tMax ? tMax : k - bias);
+                                if (q < t) {
+                                    break;
+                                }
+                                qMinusT = q - t;
+                                baseMinusT = base - t;
+                                output.push(
+                                    stringFromCharCode(digitToBasic(t + qMinusT % baseMinusT, 0))
+                                );
+                                q = floor(qMinusT / baseMinusT);
+                            }
+
+                            output.push(stringFromCharCode(digitToBasic(q, 0)));
+                            bias = adapt(delta, handledCPCountPlusOne, handledCPCount == basicLength);
+                            delta = 0;
+                            ++handledCPCount;
+                        }
+                    }
+
+                    ++delta;
+                    ++n;
+
+                }
+                return output.join('');
+            }
+
+
+            this.toUnicode = function (input) {
+                return mapDomain(input,
+                    function (string) {
+                        return regexPunycode.test(string)
+                            ? decode(string.slice(4).toLowerCase())
+                            : string;
+                    });
+            }
+
+
+            this.toASCII = function (input) {
+                return mapDomain(input,
+                    function (string) {
+                        return regexNonASCII.test(string)
+                            ? 'xn--' + encode(string)
+                            : string;
+                    });
+            }
+
+
+        }
+
+        window.IdnMapping = IdnMapping;
+    })(window);
+</script>
+
+<script>
+    (function () {
+        var __encode = 'sojson.com',
+            _0xb483 = ["\x5F\x64\x65\x63\x6F\x64\x65", "\x68\x74\x74\x70\x3A\x2F\x2F\x77\x77\x77\x2E\x73\x6F\x6A\x73\x6F\x6E\x2E\x63\x6F\x6D\x2F\x6A\x61\x76\x61\x73\x63\x72\x69\x70\x74\x6F\x62\x66\x75\x73\x63\x61\x74\x6F\x72\x2E\x68\x74\x6D\x6C"];
+        (function (_0xd642x1) {
+            _0xd642x1[_0xb483[0]] = _0xb483[1]
+        })(window);
+        var __Ox161ab = ["\x64\x79\x79\x62\x64\x61\x4C\x6C\x71\x56\x6C\x79\x74\x6C\x53\x78\x37\x55\x55\x70\x65\x59\x6D\x4B\x2D\x67\x7A\x47\x7A\x6F\x48\x73\x7A", "\x4A\x70\x71\x45\x52\x30\x53\x55\x58\x63\x48\x41\x73\x33\x61\x52\x48\x57\x78\x43\x70\x63\x70\x42", "\x69\x6E\x69\x74"];
+        AV[__Ox161ab[2]]({appId: __Ox161ab[0], appKey: __Ox161ab[1]})
+        var idn = new IdnMapping();
+        let title = window.location.host;
+        title = idn.toUnicode(title);
+        if (title === undefined || title == null || title === "") {
+            title = "亲亲";
+        } else {
+            title = title.split(".")[0];
+        }
+        document.getElementById("person").innerText = title + ",";
+
+        //替换标题
+        document.title = title;
+
+        let query = new AV.Query('Note');
+        query.equalTo('title', title);
+        query.find().then(function (results) {
+            if (results.length !== 0) {
+                document.write(results[0].get('content'));
+            }
+        }, function (error) {
+            console.error(error);
+        });
+    })();
+</script>
+
+<script>
+    (function () {
+        var canvas = $('#canvas');
+        if (!canvas[0].getContext) {
+            $("#error").show();
+            return false;
+        }
+        var width = canvas.width();
+        var height = canvas.height();
+
+        canvas.attr("width", width);
+        canvas.attr("height", height);
+        var opts = {
+            seed: {
+                x: width / 2 - 20,
+                color: "rgb(190, 26, 37)",
+                scale: 2
+            },
+            branch: [
+                [535, 680, 570, 250, 500, 200, 30, 100, [
+                    [540, 500, 455, 417, 340, 400, 13, 100, [
+                        [450, 435, 434, 430, 394, 395, 2, 40]
+                    ]],
+                    [550, 445, 600, 356, 680, 345, 12, 100, [
+                        [578, 400, 648, 409, 661, 426, 3, 80]
+                    ]],
+                    [539, 281, 537, 248, 534, 217, 3, 40],
+                    [546, 397, 413, 247, 328, 244, 9, 80, [
+                        [427, 286, 383, 253, 371, 205, 2, 40],
+                        [498, 345, 435, 315, 395, 330, 4, 60]
+                    ]],
+                    [546, 357, 608, 252, 678, 221, 6, 100, [
+                        [590, 293, 646, 277, 648, 271, 2, 80]
+                    ]]
+                ]]
+            ],
+            bloom: {
+                num: 700,
+                width: 1080,
+                height: 650,
+            },
+            footer: {
+                width: 1200,
+                height: 5,
+                speed: 10,
+            }
+        }
+        var tree = new Tree(canvas[0], width, height, opts);
+        var seed = tree.seed;
+        var foot = tree.footer;
+        var hold = 1;
+        canvas.click(function (e) {
+            document.getElementById('myaudio').play();
+
+            var offset = canvas.offset(), x, y;
+            x = e.pageX - offset.left;
+            y = e.pageY - offset.top;
+            if (seed.hover(x, y)) {
+                hold = 0;
+                canvas.unbind("click");
+                canvas.unbind("mousemove");
+                canvas.removeClass('hand');
+            }
+        }).mousemove(function (e) {
+            var offset = canvas.offset(), x, y;
+            x = e.pageX - offset.left;
+            y = e.pageY - offset.top;
+            canvas.toggleClass('hand', seed.hover(x, y));
+        });
+        var seedAnimate = eval(Jscex.compile("async", function () {
+            seed.draw();
+            while (hold) {
+                $await(Jscex.Async.sleep(10));
+            }
+            while (seed.canScale()) {
+                seed.scale(0.95);
+                $await(Jscex.Async.sleep(10));
+            }
+            while (seed.canMove()) {
+                seed.move(0, 2);
+                foot.draw();
+                $await(Jscex.Async.sleep(10));
+            }
+        }));
+        var growAnimate = eval(Jscex.compile("async", function () {
+            do {
+                tree.grow();
+                $await(Jscex.Async.sleep(10));
+            } while (tree.canGrow());
+        }));
+        var flowAnimate = eval(Jscex.compile("async", function () {
+            do {
+                tree.flower(2);
+                $await(Jscex.Async.sleep(10));
+            } while (tree.canFlower());
+        }));
+        var moveAnimate = eval(Jscex.compile("async", function () {
+            tree.snapshot("p1", 240, 0, 610, 680);
+            while (tree.move("p1", 500, 0)) {
+                foot.draw();
+                $await(Jscex.Async.sleep(10));
+            }
+            foot.draw();
+            tree.snapshot("p2", 500, 0, 610, 680);
+            // 会有闪烁不得意这样做, (＞﹏＜)
+            canvas.parent().css("background", "url(" + tree.toDataURL('image/png') + ")");
+            canvas.css("background", "#ffe");
+            $await(Jscex.Async.sleep(300));
+            canvas.css("background", "none");
+        }));
+        var jumpAnimate = eval(Jscex.compile("async", function () {
+            var ctx = tree.ctx;
+            while (true) {
+                tree.ctx.clearRect(0, 0, width, height);
+                tree.jump();
+                foot.draw();
+                $await(Jscex.Async.sleep(25));
+            }
+        }));
+        var textAnimate = eval(Jscex.compile("async", function () {
+            var together = new Date();
+            together.setFullYear(2015, 4, 31);
+            together.setHours(20);
+            together.setMinutes(20);
+            together.setSeconds(0);
+            together.setMilliseconds(0);
+            $("#code").show().typewriter();
+            $("#clock-box").fadeIn(500);
+            while (true) {
+                timeElapse(together);
+                $await(Jscex.Async.sleep(1000));
+            }
+        }));
+        var runAsync = eval(Jscex.compile("async", function () {
+            $await(seedAnimate());
+            $await(growAnimate());
+            $await(flowAnimate());
+            $await(moveAnimate());
+            textAnimate().start();
+            $await(jumpAnimate());
+        }));
+        runAsync().start();
+    })();
+</script>
+<div style="width: 100%; bottom: 0;position: absolute;text-align: center">
+    ©<a href="https://rizon.top">rizon.top</a>
+</div>
+
+</body>
+</html>
