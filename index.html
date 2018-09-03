@@ -4,7 +4,7 @@
     <title>note live</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <link rel="shortcut icon" href="favicon.ico">
-    <link rel="stylesheet" href="style.css" type="text/css"/>
+    <link rel="stylesheet" href="style/style.css" type="text/css"/>
     <script src="//cdn.bootcss.com/lodash.js/4.17.10/lodash.min.js"></script>
     <script src="//cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
     <script src="av-config.js"></script>
@@ -21,7 +21,22 @@
     <input id="title" type="hidden" class="title"/>
 </div>
 <!--<br/>-->
-<div id="tip" class="tip"></div>
+<div class="toolbar">
+    <span id="tip" style="width: 200px;">&emsp;</span>
+    <span style="margin-left: 20px">
+        <span>
+            <label for="contentType">内容类型：</label><select id="contentType">
+                <option value="txt">txt</option>
+                <option value="json">json</option>
+                <option value="html">html</option>
+            </select>
+        </span>
+        <span style="margin-left: 30px">
+            render api：&emsp;
+            <a id="api_url" style="color: black" target="_blank"></a>
+        </span>
+    </span>
+</div>
 <div class="stack ">
     <div class="layer_1">
         <div class="layer_2">

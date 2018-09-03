@@ -1,16 +1,21 @@
 // 读写数据
 let note;
 let saveStatus = 1;
-let content_obj = $("#content");
-let title_obj = $("#title");
-let tip_obj = $('#tip');
+let content_obj;
+let title_obj;
+let tip_obj;
+let contentType_obj;
+let apiUrl_obj;
 
 $(document).ready(function () {
     content_obj = $("#content");
     title_obj = $("#title");
     tip_obj = $('#tip');
+    contentType_obj = $('#contentType');
+    apiUrl_obj = $('#api_url');
 
     init();
+    //bind save event
     content_obj.blur(function () {
         console.log('on blur to save data');
         save();
@@ -23,6 +28,12 @@ $(document).ready(function () {
     content_obj.bind('input propertychange', status2unsave);
     title_obj.blur(function () {
         loadNote(title_obj.val());
+    });
+    //bind drop down event
+    contentType_obj.change(() => {
+        saveStatus = 0;
+        note.setcontentType(contentType_obj.val());
+        save();
     });
 });
 
@@ -41,7 +52,7 @@ function status2unsave() {
 }
 
 function status2error(msg) {
-    tip_obj.html("<p style='color:red'>" + msg + "</p>");
+    tip_obj.html("<font style='color:red'>" + msg + "</font>");
     saveStatus = 0;
 }
 
@@ -60,8 +71,9 @@ function loadNote(title) {
                 if (response.getCode() === 200) {
                     if (response.getData()) {
                         note = response.getNote();
-                        $("#title").val(note.getTitle());
-                        $("#content").text(note.getContent());
+                        tip_obj.val(note.getTitle());
+                        content_obj.text(note.getContent());
+                        contentType_obj.val(note.getContentType())
                     }
 
                 } else {
@@ -80,7 +92,7 @@ function loadNote(title) {
 
 
 function save(force) {
-    if (force!==true&&saveStatus === 1) {
+    if (force !== true && saveStatus === 1) {
         console.log('do not need save');
         return;
     }
@@ -113,7 +125,7 @@ function insertNote(note) {
                 let response = new Response(data);
                 if (response.getCode() !== 200) {
                     console.error(response);
-                    status2error('保存失败，'+response.getMsg());
+                    status2error('保存失败，' + response.getMsg());
                 } else {
                     status2saved();
                     note = response.getNote();
@@ -136,7 +148,7 @@ function updateNote(note) {
             if (data) {
                 let response = new Response(data);
                 if (response.getCode() !== 200) {
-                    status2error('保存失败，'+response.getMsg());
+                    status2error('保存失败，' + response.getMsg());
                 } else {
                     status2saved();
                     console.log('update data');
@@ -159,7 +171,7 @@ function deleteNote(title) {
             if (data) {
                 let response = new Response(data);
                 if (response.getCode() !== 200) {
-                    status2error('保存失败，'+response.getMsg());
+                    status2error('保存失败，' + response.getMsg());
                 } else {
                     status2saved();
                     note.setId(null);
@@ -174,10 +186,10 @@ function deleteNote(title) {
 }
 
 function init() {
-    let titleObj = $("#title");
+
     //clear
-    titleObj.val('');
-    $("#content").text('');
+    title_obj.val('');
+    content_obj.text('');
     //init
     note = new Note();
     // 从锚链接获取地址
@@ -186,7 +198,7 @@ function init() {
         // random
         title = randomString(4);
         note.setTitle(title);
-        titleObj.val(title);
+        title_obj.val(title);
         console.log("random title:" + title);
         window.location.href = '#' + title;
     } else {
@@ -200,7 +212,11 @@ function init() {
         document.title = "note live-" + title;
 
         note.setTitle(title);
-        titleObj.val(title);
+        title_obj.val(title);
+        //update apiUrl
+        apiUrl_obj.attr('href', SERVER_PATH.renderPrefix + title);
+        apiUrl_obj.text(SERVER_PATH.renderPrefix + title);
+
         loadNote(title);
     }
 }

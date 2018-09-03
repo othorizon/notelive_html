@@ -1,11 +1,13 @@
 const SERVER_PREFIX = 'http://live.api.rizon.top';
 
 const SERVER_PATH = {
-    queryOne:SERVER_PREFIX+"/server/queryOne",
-    updateOne:SERVER_PREFIX+"/server/updateOne",
-    insertOne:SERVER_PREFIX+"/server/insertOne",
-    deleteOne:SERVER_PREFIX+"/server/deleteOne",
+    renderPrefix: SERVER_PREFIX + "/render/",
+    queryOne: SERVER_PREFIX + "/server/queryOne",
+    updateOne: SERVER_PREFIX + "/server/updateOne",
+    insertOne: SERVER_PREFIX + "/server/insertOne",
+    deleteOne: SERVER_PREFIX + "/server/deleteOne"
 };
+
 class Note {
     constructor(obj) {
         if (obj) {
@@ -13,15 +15,16 @@ class Note {
             this.title = obj.title;
             this.password = obj.password;
             this.content = obj.content;
+            this.contentType = obj.contentType;
         }
         return this;
     }
 
-    getId(){
+    getId() {
         return this.id;
     }
 
-    setId(id){
+    setId(id) {
         this.id = id;
         return id;
     }
@@ -38,6 +41,10 @@ class Note {
         return this.password;
     }
 
+    getContentType() {
+        return this.contentType;
+    }
+
     setTitle(title) {
         this.title = title;
         return this;
@@ -50,6 +57,11 @@ class Note {
 
     setPassword(password) {
         this.password = password;
+        return this;
+    }
+
+    setcontentType(contentType) {
+        this.contentType = contentType;
         return this;
     }
 }
@@ -75,7 +87,8 @@ class Response {
     getData() {
         return this.data;
     }
-    getNote(){
+
+    getNote() {
         return new Note(this.data);
     }
 }
