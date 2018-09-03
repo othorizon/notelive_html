@@ -32,7 +32,7 @@ $(document).ready(function () {
     //bind drop down event
     contentType_obj.change(() => {
         status2unsave();
-        note.setcontentType(contentType_obj.val());
+        note.setContentType(contentType_obj.val());
         save(true);
     });
 });
@@ -100,49 +100,17 @@ function save(force) {
     note.setTitle($("#title").val());
     note.setContent($("#content").val());
     if (note.getContent() === "") {
-        console.log("del empty content object");
         deleteNote(note.getTitle());
-        return;
-    }
-    if (note.getId()) {
-        // exist
-        updateNote(note);
-    } else {
-        //not exist
-        if (note.getContent() !== "") {
-            insertNote(note);
-        }
+    }else {
+        updateOrInsertOne(note);
     }
 }
 
-function insertNote(note) {
-    $.ajax({
-        type: "POST",
-        url: SERVER_PATH.insertOne,
-        data: note,
-        success: function (data) {
-            if (data) {
-                let response = new Response(data);
-                if (response.getCode() !== 200) {
-                    console.error(response);
-                    status2error('保存失败，' + response.getMsg());
-                } else {
-                    status2saved();
-                    note = response.getNote();
-                }
-            }
-        },
-        error: function (error) {
-            console.error(error);
-            status2notConnect();
-        }
-    });
-}
 
-function updateNote(note) {
+function updateOrInsertOne(note) {
     $.ajax({
         type: "POST",
-        url: SERVER_PATH.updateOne,
+        url: SERVER_PATH.updateOrInsertOne,
         data: note,
         success: function (data) {
             if (data) {
@@ -173,8 +141,9 @@ function deleteNote(title) {
                 if (response.getCode() !== 200) {
                     status2error('保存失败，' + response.getMsg());
                 } else {
+                    note = new Note();
+                    console.log("del empty content object");
                     status2saved();
-                    note.setId(null);
                 }
             }
         },

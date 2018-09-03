@@ -3,7 +3,7 @@ const SERVER_PREFIX = 'http://live.api.rizon.top';
 const SERVER_PATH = {
     renderPrefix: SERVER_PREFIX + "/render/",
     queryOne: SERVER_PREFIX + "/server/queryOne",
-    updateOne: SERVER_PREFIX + "/server/updateOne",
+    updateOrInsertOne: SERVER_PREFIX + "/server/updateOrInsertOne",
     insertOne: SERVER_PREFIX + "/server/insertOne",
     deleteOne: SERVER_PREFIX + "/server/deleteOne"
 };
@@ -20,14 +20,14 @@ class Note {
         return this;
     }
 
-    getId() {
+/*    getId() {
         return this.id;
     }
 
     setId(id) {
         this.id = id;
         return id;
-    }
+    }*/
 
     getTitle() {
         return this.title;
@@ -60,7 +60,7 @@ class Note {
         return this;
     }
 
-    setcontentType(contentType) {
+    setContentType(contentType) {
         this.contentType = contentType;
         return this;
     }
