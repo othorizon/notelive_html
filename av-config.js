@@ -1,4 +1,4 @@
-const SERVER_PREFIX = 'http://live.rizon.top';
+const SERVER_PREFIX = 'http://live.api.rizon.top';
 
 const SERVER_PATH = {
     queryOne:SERVER_PREFIX+"/server/queryOne",
