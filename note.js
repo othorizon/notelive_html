@@ -92,10 +92,10 @@ function loadNote(title) {
 
 
 function save(force) {
-    if (force !== true && saveStatus === 1) {
-        console.log('do not need save');
-        return;
-    }
+    // if (force !== true && saveStatus === 1) {
+    //     console.log('do not need save');
+    //     return;
+    // }
 
     note.setTitle($("#title").val());
     note.setContent($("#content").val());
