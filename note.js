@@ -23,7 +23,7 @@ $(document).ready(function () {
     content_obj.bind('input propertychange',
         _.throttle(function () {
             save();
-        }, 10000, {leading: false})
+        }, 10000, {leading: true})
     );
     content_obj.bind('input propertychange', status2unsave);
     title_obj.blur(function () {
@@ -31,9 +31,9 @@ $(document).ready(function () {
     });
     //bind drop down event
     contentType_obj.change(() => {
-        saveStatus = 0;
+        status2unsave();
         note.setcontentType(contentType_obj.val());
-        save();
+        save(true);
     });
 });
 
