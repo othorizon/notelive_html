@@ -111,7 +111,7 @@ function insertNote(note) {
         success: function (data) {
             if (data) {
                 let response = new Response(data);
-                if (new response.getCode() !== 200) {
+                if (response.getCode() !== 200) {
                     console.error(response);
                     status2error('保存失败，'+response.getMsg());
                 } else {
