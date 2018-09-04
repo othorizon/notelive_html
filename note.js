@@ -97,20 +97,20 @@ function save(force) {
     //     return;
     // }
 
-    note.setTitle($("#title").val());
-    note.setContent($("#content").val());
+    // note.setTitle(title_obj.val());
+    note.setContent(content_obj.val());
     if (note.getContent() === "") {
         deleteNote(note.getTitle());
     }else {
-        updateOrInsertOne(note);
+        replaceOrInsertOne(note);
     }
 }
 
 
-function updateOrInsertOne(note) {
+function replaceOrInsertOne(note) {
     $.ajax({
         type: "POST",
-        url: SERVER_PATH.updateOrInsertOne,
+        url: SERVER_PATH.replaceOrInsertOne,
         data: note,
         success: function (data) {
             if (data) {

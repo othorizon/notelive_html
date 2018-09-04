@@ -3,8 +3,7 @@ const SERVER_PREFIX = 'http://live.api.rizon.top';
 const SERVER_PATH = {
     renderPrefix: SERVER_PREFIX + "/render/",
     queryOne: SERVER_PREFIX + "/server/queryOne",
-    updateOrInsertOne: SERVER_PREFIX + "/server/updateOrInsertOne",
-    insertOne: SERVER_PREFIX + "/server/insertOne",
+    replaceOrInsertOne: SERVER_PREFIX + "/server/replaceOrInsertOne",
     deleteOne: SERVER_PREFIX + "/server/deleteOne"
 };
 
